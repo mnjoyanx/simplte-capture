@@ -6,7 +6,7 @@ const recordButton = document.querySelector('button#record');
 const downloadButton = document.querySelector('button#download');
 
 const startMain = document.getElementById('start-main')
-const modal = document.getElementById('modal')
+const modal = document.getElementById('modal-record')
 const actions = document.getElementById('action')
 const deleteBtn = document.getElementById('delete-btn')
 const recordMain = document.getElementById('record-main')
@@ -17,7 +17,7 @@ recordButton.addEventListener('click', () => {
     } else {
         stopRecording();
         recordButton.textContent = 'Record';
-        downloadButton.disabled = false;
+        downloadButton.disabled = false;   
     }
 });
 
@@ -51,6 +51,7 @@ function startRecording() {
     startMain.classList.add('hidden')
     modal.classList.remove('hidden')
     recordMain.classList.remove('hidden')
+    actions.classList.add('hidden')
 
     if (recordedVideo.src != 'null') {
         recordedVideo.src = null;
@@ -69,18 +70,29 @@ function startRecording() {
     }
 
     console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-    recordButton.textContent = 'Stop Recording';
+    recordButton.innerText = ''
+    let stopSpan = document.createElement('span')
+    stopSpan.classList.add('right-space')
+    stopSpan.textContent = 'Stop Recording'
+    recordButton.append(stopSpan)
+    const stopIcon = document.createElement('i')
+    
+    stopIcon.classList.add('fa')
+    stopIcon.classList.add('fa-stop-circle')
+    recordButton.insertBefore(stopIcon, stopSpan)
     downloadButton.disabled = true;
-    mediaRecorder.onstop = (event) => {
-        console.log('Recorder stopped: ', event);
-        console.log('Recorded Blobs: ', recordedBlobs);
-    };
+    
     mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.start();
     console.log('MediaRecorder started', mediaRecorder);
 }
 
 async function stopRecording() {
+
+    mediaRecorder.onstop = (event) => {
+        console.log('Recorder stopped: ', event);
+        console.log('Recorded Blobs: ', recordedBlobs);
+    };
     startMain.classList.remove('hidden')
     mediaRecorder.stop();
     actions.classList.remove('hidden')
@@ -94,9 +106,7 @@ async function stopRecording() {
         recordedVideo.src = window.URL.createObjectURL(superBuffer);
         recordedVideo.controls = true;
         recordedVideo.play();
-
     }, 100)
-
 
 }
 
