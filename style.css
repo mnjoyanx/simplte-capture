@@ -78,8 +78,8 @@ button {
 .modal--footer {
   background-color: var(--primary-color);
   color: whtie;
-  padding: 10px 20px;
   text-align: center;
+  width: 100%;
 }
 
 .modal--footer button {
@@ -107,4 +107,39 @@ button {
 
 .stop-recording-btn i {
   font-size: 28px;
+}
+
+.modal-body {
+  padding: 10px 20px 30px;
+}
+
+.title {
+  font-size: 22px;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.terms-conditions {
+  margin-top: 10px;
+}
+
+.err-message {
+  color: red;
+}
+
+#timer-main {
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+.notification-main {
+  margin-left: 20px;
+  color: red;
+  font-size: 18px;
+}
+
+.your-record {
+  color: var(--primary-color);
+  font-size: 21px;
+  margin-left: 20px;
 }
