@@ -40,7 +40,7 @@ const recordNotification = document.getElementById('record-notification')
 
 
 downloadButton.addEventListener('click', () => {
-    const blob = new Blob(recordedBlobs, { type: 'video/mp4' });
+    const blob = new Blob(recordedBlobs, { type: 'video/mp4', audio: true });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';
@@ -71,7 +71,7 @@ function handleDataAvailable(event) {
         return;
     }
 
-mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.start();
 }
 
@@ -87,8 +87,6 @@ function startRecording() {
         recordedVideo.classList.add('hidden')
     }
     recordBlob()
-
-
     timerFn()
 
     recordButton.innerText = ''
@@ -103,15 +101,10 @@ function startRecording() {
     recordButton.insertBefore(stopIcon, stopSpan)
     
     stopFn()
-    
 }
 
-
 async function stopFn(timer) {
- 
     clearInterval(timer)
-   
-    
 }
 
 recordButton.addEventListener('click', async () => {
@@ -120,23 +113,12 @@ recordButton.addEventListener('click', async () => {
     actions.classList.remove('hidden')
     modal.classList.add('hidden')
 
-
-    
-    // videoSelector.srcObject = null
-    // videoSelector.classList.add('hidden')
-    // startRecordingSelector.classList.remove('hidden')
-    // stopRecordingSelector.classList.add('hidden')
-
-
     setTimeout(async () => {
         recordedVideo.classList.remove('hidden')
         const superBuffer = new Blob(recordedBlobs, { type: 'video/webm' });
-        // recordedVideo.src = null;
-        // recordedVideo.srcObject = null;
         recordedVideo.src = window.URL.createObjectURL(superBuffer);
         recordedVideo.controls = true;
         recordedVideo.play();
-    // mediaRecorder.stream.getVideoTracks()[0].addEventListener('ended', () => alert(88888888))
         stopTrack()
 
     }, 100)
@@ -146,28 +128,23 @@ recordButton.addEventListener('click', async () => {
 
 
 function handleSuccess(stream) {
-    console.log('getUserMedia() got stream:', stream);
     window.stream = stream;
-
       stream.getVideoTracks()[0].onended = function () {
-        //   clearInterval(timer)
-        //     timerSelector.classList.add('hidden')
           recordButton.click()
-    };
+      };
+    
     startRecording()
 }
 
 async function init(constraints) {
-        const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
-
+    let stream = await navigator.mediaDevices.getDisplayMedia(constraints);
     try {
-        console.log(stream, 8999999999999)
         
-        handleSuccess(stream);
+        if (stream) {
+            handleSuccess(stream);            
+        } else return
 
     } catch (e) {
-        console.log(stream, 8999999999999)
-
         console.error('navigator.getUserMedia error:', e);
         return
     }
@@ -180,8 +157,9 @@ document.querySelector('button#start').addEventListener('click', async () => {
     const constraints = {
         video: {
             width: 500,
-            height: 400
-        }
+            height: 400,
+        },
+        audio: true
     };
 
 
@@ -207,7 +185,6 @@ deleteBtn.addEventListener('click', () => {
     recordedVideo.src = window.URL.createObjectURL(superBuffer);
     recordedVideo.controls = true;
     yourRecord.classList.add('hidden')
-    // recordedVideo.play();
 })
 
 
@@ -243,7 +220,7 @@ function timerFn() {
         }
         
         minute.textContent = b(_t)
-    }, 1000)
+    },10)
 
 }
 
